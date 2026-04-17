@@ -2,12 +2,16 @@ import { useState } from "react";
 
 export const AddTodo = ({ onAdd }) => {
   const [text, setText] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [showDeadlineInput, setShowDeadlineInput] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim()) {
-      onAdd(text);
+      onAdd(text, deadline);
       setText("");
+      setDeadline("");
+      setShowDeadlineInput(false);
     }
   };
 
@@ -41,6 +45,38 @@ export const AddTodo = ({ onAdd }) => {
           </svg>
         </button>
       </div>
+      {showDeadlineInput && (
+        <div className="flex items-center gap-2 mt-2 text-gray-500 dark:text-gray-400">
+          <input
+            type="datetime-local"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            className="p-2 border rounded flex-1  "
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setDeadline("");
+              setShowDeadlineInput(false);
+            }}
+            className="p-2 hover:text-gray-700 hover:dark:text-gray-100"
+          >
+            Отмена
+          </button>
+        </div>
+      )}
+
+      {!showDeadlineInput && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowDeadlineInput(true);
+          }}
+          className="self-start text-sm text-blue-500 hover:text-blue-700 dark:text-blue-300 hover:dark:text-blue-400"
+        >
+          + Добавить дедлайн
+        </button>
+      )}
     </form>
   );
 };
