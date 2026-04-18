@@ -1,15 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TodoItem } from "./components/TodoItem";
 import { AddTodo } from "./components/AddTodo";
 import { ToggleTheme } from "./components/ToggleTheme";
 import { getInitialTheme } from "./helpers/getInitialTheme";
 import { toggleTheme } from "./helpers/toggleTheme";
 
+const LOCAL_STORAGE_KEY = "todos";
+const API_URL = "https://69e374fa3327837a15532d7a.mockapi.io/api/v1/todos";
+
 function App() {
   const [todos, setTodos] = useState([]);
   const [theme, setTheme] = useState(getInitialTheme());
 
-  const toggleComplete = (id) => {
+  useEffect(() => {
+    const loadInitialData = async () => {
+      const savedTodos = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEY) || "[]",
+      );
+      setTodos(savedTodos);
+
+      try {
+        const response = await fetch(API_URL);
+
+        if (response.ok) {
+          const serverTodos = await response.json();
+          setTodos(serverTodos);
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(serverTodos));
+        }
+      } catch (error) {
+        console.error("Ошибка загрузки данных: ", error.message);
+      }
+    };
+    loadInitialData();
+  }, []);
+
+  const toggleComplete = async (id) => {
     const todoToUpdate = todos.find((todo) => todo.id === id);
 
     if (!todoToUpdate) return;
@@ -24,22 +49,69 @@ function App() {
     );
 
     setTodos(updatedTodos);
+
+    try {
+      await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        //нужен метод PATCH, но мок сервис его не поддерживает
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedTodo),
+      });
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTodos));
+    } catch (error) {
+      console.error("Ошбика обновления: ", error.message);
+      setTodos(todos);
+    }
   };
 
-  const onDelete = (id) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  const onDelete = async (id) => {
+    const prevTodos = todos;
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+
+    try {
+      await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTodos));
+    } catch (error) {
+      console.error("Ошбика удаления: ", error.message);
+      setTodos(prevTodos);
+    }
   };
 
-  const onAdd = (text, deadline) => {
+  const onAdd = async (text, deadline) => {
     const newTodo = {
-      id: Date.now(),
+      id: `temp_${Date.now()}`,
       text,
       completed: false,
       createdAt: new Date().toISOString(),
       deadline: deadline || null,
       order: todos.length + 1,
     };
-    setTodos([...todos, newTodo]);
+
+    const updatedTodos = [...todos, newTodo];
+    setTodos(updatedTodos);
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTodo),
+      });
+
+      const createdTodo = await response.json();
+
+      const syncedTodos = updatedTodos.map((todo) =>
+        todo.id === newTodo.id ? createdTodo : todo,
+      );
+
+      setTodos(syncedTodos);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(syncedTodos));
+    } catch (error) {
+      console.error("Ошибка добавления: ", error.message);
+      setTodos(todos);
+    }
   };
 
   return (
