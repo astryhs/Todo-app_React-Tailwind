@@ -7,21 +7,21 @@ export const TodoFilter = ({ filter, setFilter }) => {
     }`;
 
   return (
-    <div className="flex flex-col gap-2 mb-4 ">
+    <div className="flex flex-row gap-2 mb-4 ">
       <button onClick={() => setFilter("all")} className={buttonClasses("all")}>
         Все
-      </button>
-      <button
-        onClick={() => setFilter("active")}
-        className={buttonClasses("active")}
-      >
-        Не выполненные
       </button>
       <button
         onClick={() => setFilter("completed")}
         className={buttonClasses("completed")}
       >
         Выполненные
+      </button>
+      <button
+        onClick={() => setFilter("active")}
+        className={buttonClasses("active")}
+      >
+        Не выполненные
       </button>
     </div>
   );

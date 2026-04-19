@@ -23,6 +23,7 @@ function App() {
     handleDeleteCompleted,
     confirmDeleteCompleted,
     hasCompletedTodos,
+    handleReorder,
   } = useTodoManagement();
 
   return (
@@ -39,6 +40,7 @@ function App() {
           handleUpdate={handleUpdate}
           toggleComplete={toggleComplete}
           setDeletingId={setDeletingId}
+          onReorder={handleReorder}
         />
 
         {deletingID && (

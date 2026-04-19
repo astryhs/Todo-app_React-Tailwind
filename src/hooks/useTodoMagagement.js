@@ -21,8 +21,11 @@ export const useTodoManagement = () => {
 
         if (response.ok) {
           const serverTodos = await response.json();
-          setTodos(serverTodos);
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(serverTodos));
+          const sortedTodos = [...serverTodos].sort(
+            (a, b) => a.order - b.order,
+          );
+          setTodos(sortedTodos);
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(sortedTodos));
         }
       } catch (error) {
         console.error("Ошибка загрузки данных: ", error.message);
@@ -188,6 +191,34 @@ export const useTodoManagement = () => {
     setISDeletingCompleted(false);
   };
 
+  //функция изменения порядка
+  const handleReorder = async (newTodos) => {
+    const oldTodos = [...todos];
+
+    const updatedTodos = newTodos.map((todo, index) => ({
+      ...todo,
+      order: index + 1, // ← ключевой момент!
+    }));
+    setTodos(updatedTodos);
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTodos));
+
+    try {
+      // Отправляем обновленный порядок на сервер
+      for (const todo of updatedTodos) {
+        await fetch(`${API_URL}/${todo.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ order: todo.order }),
+        });
+      }
+    } catch (error) {
+      console.error("Ошибка синхронизации порядка: ", error.message);
+      setTodos(oldTodos);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(oldTodos));
+    }
+  };
+
   return {
     todos,
     setTodos,
@@ -202,5 +233,6 @@ export const useTodoManagement = () => {
     handleDeleteCompleted,
     confirmDeleteCompleted,
     hasCompletedTodos,
+    handleReorder,
   };
 };

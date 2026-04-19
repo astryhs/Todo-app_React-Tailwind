@@ -26,7 +26,7 @@ export const TodoEditForm = ({
         />
         <button
           onClick={handleSave}
-          className="flex items-center justify-center gap-1 px-2 py-1 sm:px-3 sm:py-1 text-green-600 hover:text-green-800 cursor-pointer bg-white border-2 border-green-500 rounded hover:bg-green-50 transition-colors text-sm sm:text-base "
+          className="flex items-center justify-center gap-1 px-2 py-1 sm:px-3 sm:py-1 text-green-600 hover:text-green-800 cursor-pointer bg-white dark:bg-page-dark border-2 border-green-500 rounded hover:bg-green-50 dark:hover:bg-green-300  transition-colors text-sm sm:text-base "
         >
           <CheckedIcon />
           <span className="sm:hidden">ОК</span>

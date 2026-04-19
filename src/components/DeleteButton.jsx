@@ -1,4 +1,4 @@
-export const DeleteButton = (onClick) => {
+export const DeleteButton = ({onClick}) => {
     return (
          <button
         onClick={onClick}
