@@ -1,3 +1,7 @@
+# Dependencies
+node_modules/
+node_modules/.vite/
+
 # Logs
 logs
 *.log
@@ -6,8 +10,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+react-refresh-*.log
 
-node_modules
+# Build outputs
 dist
 dist-ssr
 *.local
@@ -17,8 +22,27 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+**/.DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Vite cache
+.vite/
+
+# ESLint cache
+.eslintcache
+
+# Temp files
+*.tmp
+*.temp
+*.css.map
+
