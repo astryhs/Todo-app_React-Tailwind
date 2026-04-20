@@ -2,7 +2,7 @@ export const DeleteButton = ({onClick}) => {
     return (
          <button
         onClick={onClick}
-        className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all duration-300 cursor-pointer"
+        className="md:opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all duration-300 cursor-pointer"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

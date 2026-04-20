@@ -207,7 +207,7 @@ export const useTodoManagement = () => {
       // Отправляем обновленный порядок на сервер
       for (const todo of updatedTodos) {
         await fetch(`${API_URL}/${todo.id}`, {
-          method: "PUT",
+          method: "PUT",//нужен метод PATCH, но мок сервис его не поддерживает
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ order: todo.order }),
         });

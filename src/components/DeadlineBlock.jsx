@@ -33,7 +33,7 @@ export const DeadlineBlock = ({
           onClick={() => {
             setShowDeadlineInput(true);
           }}
-          className="self-start text-sm text-blue-500 hover:text-blue-700 dark:text-blue-300 hover:dark:text-blue-400"
+          className="self-start mt-2 text-sm text-blue-500 hover:text-blue-700 dark:text-blue-300 hover:dark:text-blue-400"
         >
           + Добавить дедлайн
         </button>
