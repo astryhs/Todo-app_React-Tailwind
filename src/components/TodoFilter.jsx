@@ -7,7 +7,7 @@ export const TodoFilter = ({ filter, setFilter }) => {
     }`;
 
   return (
-    <div className="flex flex-col w-full justify-around sm:flex-row gap-2 mb-4 ">
+    <div className="flex flex-col w-full justify-start sm:flex-row gap-2 mb-4 ">
       <button onClick={() => setFilter("all")} className={buttonClasses("all")}>
         Все
       </button>

@@ -24,7 +24,7 @@ export const MainContent = ({
   });
 
   return (
-    <div className="mx-auto  flex flex-col gap-3">
+    <div className="mx-auto min-w-xs flex flex-col gap-3">
       <Header />
       <AddTodo onAdd={onAdd} />
       <TodoFilter filter={filter} setFilter={setFilter} />

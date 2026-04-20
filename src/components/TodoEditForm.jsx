@@ -11,7 +11,7 @@ export const TodoEditForm = ({
   return (
     <div
       ref={editFormRef}
-      className="flex flex-col w-full max-sm:max-w-40  gap-2 items-stretch"
+      className="flex flex-col w-full max-sm:max-w-50  gap-2 items-stretch"
     >
       <input
         type="text"
