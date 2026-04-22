@@ -51,10 +51,10 @@ export const AddTodo = ({ onAdd }) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const recognitionInstance = new SpeechRecognition();
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
       if (SpeechRecognition) {
-        const recognitionInstance = new SpeechRecognition();
         recognitionInstance.continuous = true;
         recognitionInstance.lang = "ru-RU";
         recognitionInstance.interimResults = true;
