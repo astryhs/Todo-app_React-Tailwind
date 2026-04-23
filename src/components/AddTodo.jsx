@@ -53,34 +53,39 @@ export const AddTodo = ({ onAdd }) => {
     if (typeof window !== "undefined") {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
       if (SpeechRecognition) {
+        const recognitionInstance = new SpeechRecognition();
         recognitionInstance.continuous = true;
         recognitionInstance.lang = "ru-RU";
         recognitionInstance.interimResults = true;
 
         recognitionInstance.onresult = (event) => {
           let finalTranscript = "";
-          let intermScript = "";
+          let interimScript = "";
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcript = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
               finalTranscript += transcript;
             } else {
-              intermScript += transcript;
+              interimScript += transcript;
             }
+            console.log("Финал", finalTranscript);
+            console.log("Промежуточный", interimScript);
+
             if (finalTranscript) {
               finalTextRef.current =
                 finalTextRef.current + " " + finalTranscript;
               setText(finalTextRef.current);
-            } else if (intermScript) {
-              setText(finalTextRef.current + " " + intermScript);
+            } else if (interimScript) {
+              setText(finalTextRef.current + " " + interimScript);
             }
           }
           moveCursorToEnd();
+          // Перемещаем курсор в конец при каждом обновлении текста
         };
+
         recognitionInstance.onerror = (event) => {
-          console.error("Ошибка распознования: ", event.error.message);
+          console.error("Ошибка распознавания:", event.error);
           stopListening();
         };
 
@@ -89,9 +94,11 @@ export const AddTodo = ({ onAdd }) => {
             recognitionInstance.start();
           }
         };
+
         setRecognition(recognitionInstance);
       }
     }
+
     return () => {
       if (recognition) {
         recognition.stop();
@@ -108,12 +115,14 @@ export const AddTodo = ({ onAdd }) => {
       setDeadline("");
       setShowDeadlineInput("");
       finalTextRef.current = "";
+    } else {
+      alert("Введите текст задачи");
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="mb-6 ">
-      <div className="flex items-center bg-white rounded-lg shadow-sm dark:shadow-white overflow-hidden border border-gray-100 focus-within:ring-2 focus-within:ring-blue-500">
+      <div className="flex bg-white rounded-lg shadow-sm dark:shadow-white overflow-hidden border border-gray-100 focus-within:ring-2 focus-within:ring-blue-500  dark:bg-page-dark">
         <input
           type="text"
           value={text}
@@ -121,27 +130,29 @@ export const AddTodo = ({ onAdd }) => {
           ref={inputRef}
           //  // Добавляем ref к input
           placeholder="Добавить задачу..."
-          className="flex-1 p-3 text-gray-700 dark:bg-page-dark dark:text-txt-dark outline-none placeholder-gray-400"
+          className="flex-1 p-3 text-gray-700 outline-none placeholder-gray-400 dark:text-txt-dark "
         />
-        <button
-          type="button"
-          onClick={toggleListening}
-          className={`cursor-pointer p-3 ${isListening ? "bg-red-300 hover:bg-red-400" : "bg-blue-100  hover:bg-btn-light-hv hover:dark:bg-btn-light"} transition-colors duration-300 flex items-center justify-center`}
-          title={isListening ? "Остановить запись" : "Начать запись"}
-        >
-          <img
-            src={MicrophoneIcon}
-            alt="Микрофон"
-            className={`w-6 h-6 4${isListening ? "filter brightness-0 invert" : ""}`}
-          />
-        </button>
-        <button
-          type="submit"
-          className={`p-3 ${isListening ? "bg-gray-400 cursor-not-allowed" : " bg-btn-light hover:bg-btn-light-hv  cursor-pointer dark:bg-btn-dark hover:dark:bg-btn-dark-hv "} text-white transition-colors duration-300`}
-          disabled={isListening}
-        >
-          <PlusIcon />
-        </button>
+        <div className="min-[500px]:flex max-[500px]:w-full ">
+          <button
+            type="button"
+            onClick={toggleListening}
+            className={`cursor-pointer p-3 ${isListening ? "bg-red-300 hover:bg-red-400" : "bg-blue-100  hover:bg-btn-light-hv hover:dark:bg-btn-light"} transition-colors duration-300 flex items-center justify-center w-full`}
+            title={isListening ? "Остановить запись" : "Начать запись"}
+          >
+            <img
+              src={MicrophoneIcon}
+              alt="Микрофон"
+              className={`w-6 h-6 4${isListening ? "filter brightness-0 invert" : ""}`}
+            />
+          </button>
+          <button
+            type="submit"
+            className={`p-3 ${isListening ? "bg-gray-400 cursor-not-allowed" : " bg-btn-light hover:bg-btn-light-hv  cursor-pointer dark:bg-btn-dark hover:dark:bg-btn-dark-hv "} text-white transition-colors duration-300 w-full flex items-center justify-center`}
+            disabled={isListening}
+          >
+            <PlusIcon />
+          </button>
+        </div>
       </div>
       <DeadlineBlock
         showDeadlineInput={showDeadlineInput}
@@ -152,7 +163,7 @@ export const AddTodo = ({ onAdd }) => {
       {isListening && (
         <div className="mt-2 text-sm text-red-400 flex items-center">
           <div className="w-3 h-3 rounded-full bg-red-400 animate-pulse mr-2 "></div>{" "}
-          <span>Идет запись...Нажмите микрофон для остановки</span>
+          <span>Идет прослушивание...Нажмите микрофон для остановки</span>
         </div>
       )}
     </form>

@@ -7,7 +7,7 @@ export const TodoTextDisplay = ({ todo, setIsEdinig }) => {
       onDoubleClick={() => setIsEdinig(true)}
     >
       <span
-        className={`text-1 ${todo.completed ? "line-through text-gray-400" : "text-gray-700 dark:text-gray-300"}`}
+        className={`text-sm min-[200px]:break-all ${todo.completed ? "line-through text-gray-400" : "text-gray-700 dark:text-gray-300"}`}
       >
         {todo.text}
       </span>

@@ -3,8 +3,7 @@ import { AddTodo } from "./AddTodo";
 import { TodoList } from "./TodoList";
 import { TodoFilter } from "./TodoFilter";
 import { useState } from "react";
-
-export const MainContent = ({
+const MainContent = ({
   onAdd,
   todos,
   handleUpdate,
@@ -24,7 +23,7 @@ export const MainContent = ({
   });
 
   return (
-    <div className="mx-auto min-w-xs flex flex-col gap-3">
+    <div className="flex flex-col max-w-175 mx-auto  gap-3">
       <Header />
       <AddTodo onAdd={onAdd} />
       <TodoFilter filter={filter} setFilter={setFilter} />
@@ -38,3 +37,5 @@ export const MainContent = ({
     </div>
   );
 };
+
+export default MainContent;

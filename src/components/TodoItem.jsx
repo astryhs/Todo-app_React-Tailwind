@@ -52,30 +52,33 @@ export const TodoItem = ({
       ref={ref}
       className=" group flex items-center justify-between p-4 gap-3 bg-white dark:bg-page-dark rounded-lg  shadow-sm hover:shadow-md dark:shadow-white transition-shadow duration-300 border-gray-100"
     >
-      <div
-        ref={handleRef}
-        className="h-5 w-3 border-l-5 border-r-5 border-gray-300 border-dotted mx-0.5 cursor-grab active:cursor-grabbing"
-      ></div>
-      <div className="flex items-center gap-3 ">
-        <CheckBoxButton
-          completed={todo.completed}
-          handleToggle={handleToggle}
-        />
-
-        {/* начинается редактирование  */}
-        {isEditing ? (
-          <TodoEditForm
-            editFormRef={editFormRef}
-            editText={editText}
-            setEditText={setEditText}
-            handleSave={handleSave}
-            editDeadline={editDeadline}
-            setEditDeadline={setEditDeadline}
+      <div className="flex flex-row items-center gap-2">
+        <div
+          ref={handleRef}
+          className="h-5 w-3 border-l-5 border-r-5 border-gray-300 border-dotted mx-0.5 cursor-grab active:cursor-grabbing shrink-0"
+        ></div>
+        <div className="flex items-center gap-3 ">
+          <CheckBoxButton
+            completed={todo.completed}
+            handleToggle={handleToggle}
           />
-        ) : (
-          <TodoTextDisplay todo={todo} setIsEdinig={setIsEdinig} />
-        )}
+
+          {/* начинается редактирование  */}
+          {isEditing ? (
+            <TodoEditForm
+              editFormRef={editFormRef}
+              editText={editText}
+              setEditText={setEditText}
+              handleSave={handleSave}
+              editDeadline={editDeadline}
+              setEditDeadline={setEditDeadline}
+            />
+          ) : (
+            <TodoTextDisplay todo={todo} setIsEdinig={setIsEdinig} />
+          )}
+        </div>
       </div>
+
       <DeleteButton onClick={() => onDelete(todo.id)} />
     </div>
   );

@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { useTodoManagement } from "./hooks/useTodoMagagement";
+import { useState, lazy, Suspense } from "react";
+import { useTodoManagement } from "./hooks/useTodoManagement";
 import { ToggleTheme } from "./components/ToggleTheme";
 import { toggleTheme } from "./helpers/toggleTheme";
 import { getInitialTheme } from "./helpers/getInitialTheme";
 import { DeleteConfirmModule } from "./components/DeleteConfirmModule";
 import { DeleteCompletedButton } from "./components/DeleteCompletedButton";
-import { MainContent } from "./components/MainContent";
+import { Loader } from "./components/Loader";
+
+const MainContent = lazy(() => import ("./components/MainContent"));
 
 function App() {
   const [theme, setTheme] = useState(getInitialTheme());
@@ -33,15 +35,16 @@ function App() {
         className="flex flex-col min-h-screen justify-center items-center bg-page-light dark:bg-page-dark p-6"
       >
         <ToggleTheme toggleTheme={() => toggleTheme(setTheme)} theme={theme} />
-
-        <MainContent
-          onAdd={onAdd}
-          todos={todos}
-          handleUpdate={handleUpdate}
-          toggleComplete={toggleComplete}
-          setDeletingId={setDeletingId}
-          onReorder={handleReorder}
-        />
+        <Suspense fallback={<Loader />}>
+          <MainContent
+            onAdd={onAdd}
+            todos={todos}
+            handleUpdate={handleUpdate}
+            toggleComplete={toggleComplete}
+            setDeletingId={setDeletingId}
+            onReorder={handleReorder}
+          />
+        </Suspense>
 
         {deletingID && (
           <DeleteConfirmModule
